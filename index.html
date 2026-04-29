@@ -149,26 +149,90 @@ nav {
 .skill-bullets li { display:flex; align-items:center; gap:12px; font-size:13px; color:var(--white-dim); }
 .skill-bullets li::before { content:''; width:20px; height:1px; background:var(--yellow); flex-shrink:0; }
 
-/* ── PHOTO SLOTS (3 per section) ── */
+/* ── PHOTO SLOTS ── */
 .skill-photos { display:flex; flex-direction:column; gap:16px; }
-.photo-slot { background:var(--black-card); border:1px solid var(--black-border); aspect-ratio:16/9; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; transition:border-color 0.3s, transform 0.3s; }
+.photo-slot {
+  background:var(--black-card); border:1px solid var(--black-border);
+  aspect-ratio:16/9; position:relative; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  transition:border-color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
 .photo-slot:hover { border-color:var(--yellow); transform:scale(1.01); }
 .photo-slot img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
 .photo-slot::before { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(135deg,transparent 45%,rgba(245,197,24,0.04) 100%); }
+
+/* Placeholder X pattern — shown only when no image loaded */
 .photo-slot.placeholder::after {
   content:''; position:absolute; inset:0;
   background:
     linear-gradient(to bottom right,transparent calc(50% - 0.5px),rgba(245,197,24,0.08) calc(50% - 0.5px),rgba(245,197,24,0.08) calc(50% + 0.5px),transparent calc(50% + 0.5px)),
     linear-gradient(to bottom left,transparent calc(50% - 0.5px),rgba(245,197,24,0.08) calc(50% - 0.5px),rgba(245,197,24,0.08) calc(50% + 0.5px),transparent calc(50% + 0.5px));
 }
-.photo-label { position:relative; z-index:2; text-align:center; }
+
+/* Label shown only on placeholder (no image) */
+.photo-label {
+  position:relative; z-index:2; text-align:center;
+  display:none; /* hidden by default */
+}
+.photo-slot.placeholder .photo-label { display:block; }
 .photo-label p { font-family:var(--font-mono); font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--yellow); opacity:0.6; }
 .photo-label small { display:block; margin-top:6px; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--white-dim); opacity:0.4; }
+
 .photo-corner { position:absolute; width:12px; height:12px; z-index:3; }
 .photo-corner.tl { top:8px; left:8px; border-top:1px solid var(--yellow); border-left:1px solid var(--yellow); }
 .photo-corner.tr { top:8px; right:8px; border-top:1px solid var(--yellow); border-right:1px solid var(--yellow); }
 .photo-corner.bl { bottom:8px; left:8px; border-bottom:1px solid var(--yellow); border-left:1px solid var(--yellow); }
 .photo-corner.br { bottom:8px; right:8px; border-bottom:1px solid var(--yellow); border-right:1px solid var(--yellow); }
+
+/* Zoom icon on hover (only when image loaded) */
+.photo-slot .zoom-icon {
+  position:absolute; bottom:12px; right:12px; z-index:4;
+  width:28px; height:28px; background:rgba(245,197,24,0.9);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; transition:opacity 0.2s;
+  pointer-events:none;
+}
+.photo-slot:not(.placeholder):hover .zoom-icon { opacity:1; }
+.zoom-icon svg { width:14px; height:14px; fill:var(--black); }
+
+/* ── LIGHTBOX ── */
+#lightbox {
+  position:fixed; inset:0; z-index:2000;
+  background:rgba(8,8,8,0.96);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; visibility:hidden;
+  transition:opacity 0.35s ease, visibility 0.35s;
+}
+#lightbox.open { opacity:1; visibility:visible; }
+#lightbox-img {
+  max-width:90vw; max-height:88vh;
+  object-fit:contain;
+  display:block;
+  box-shadow:0 0 80px rgba(0,0,0,0.8);
+  transform:scale(0.94); transition:transform 0.35s ease;
+}
+#lightbox.open #lightbox-img { transform:scale(1); }
+#lightbox-close {
+  position:absolute; top:24px; right:32px;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:0.25em;
+  text-transform:uppercase; color:var(--yellow);
+  background:none; border:1px solid var(--yellow);
+  padding:8px 20px; cursor:none;
+  transition:background 0.2s, color 0.2s;
+}
+#lightbox-close:hover { background:var(--yellow); color:var(--black); }
+#lightbox-nav {
+  position:absolute; bottom:28px; left:50%; transform:translateX(-50%);
+  display:flex; align-items:center; gap:20px;
+}
+.lb-arrow {
+  font-family:var(--font-display); font-size:26px; color:var(--yellow);
+  background:none; border:1px solid var(--black-border);
+  padding:6px 18px; cursor:none; transition:border-color 0.2s, background 0.2s;
+}
+.lb-arrow:hover { border-color:var(--yellow); background:var(--yellow-faint); }
+#lb-counter { font-family:var(--font-mono); font-size:10px; letter-spacing:0.3em; color:var(--white-dim); }
 
 /* ── FOOTER ── */
 footer { position:relative; z-index:2; padding:60px 48px; border-top:1px solid var(--black-border); display:flex; justify-content:space-between; align-items:center; }
@@ -204,6 +268,17 @@ footer { position:relative; z-index:2; padding:60px 48px; border-top:1px solid v
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button id="lightbox-close">✕ Close</button>
+  <img id="lightbox-img" src="" alt=""/>
+  <div id="lightbox-nav">
+    <button class="lb-arrow" id="lb-prev">←</button>
+    <span id="lb-counter">1 / 3</span>
+    <button class="lb-arrow" id="lb-next">→</button>
+  </div>
+</div>
+
 <!-- INTRO -->
 <div id="intro">
   <div class="intro-name" id="introName">SARAN S.</div>
@@ -216,8 +291,6 @@ footer { position:relative; z-index:2; padding:60px 48px; border-top:1px solid v
   <a href="#hero" class="nav-logo">SS.</a>
   <ul class="nav-links">
     <li><a href="#index">Index</a></li>
-    <li><a href="#logo-design">Logo Design</a></li>
-    <li><a href="#uiux">UI/UX</a></li>
     <li><a href="#modeling">Modeling</a></li>
     <li><a href="#texturing">Texturing</a></li>
     <li><a href="#lighting-lookdev">Lighting &amp; Lookdev</a></li>
@@ -257,67 +330,42 @@ footer { position:relative; z-index:2; padding:60px 48px; border-top:1px solid v
     <h2 class="section-title reveal">INDEX</h2>
   </div>
   <div class="index-grid">
-
-    <!-- ════════════════════════════════ -->
-    <!-- GRAPHICS WORK — ARUSAI (top)    -->
-    <!-- ════════════════════════════════ -->
-    <a href="#logo-design" class="index-item reveal">
+    <a href="#modeling" class="index-item reveal">
       <span class="index-num">02</span>
-      <div class="index-info">
-        <h3>Logo Design</h3>
-        <p>Brand Identity — Arusai</p>
-      </div>
-      <span class="index-arrow">→</span>
-    </a>
-    <a href="#uiux" class="index-item reveal reveal-delay-1">
-      <span class="index-num">03</span>
-      <div class="index-info">
-        <h3>UI/UX</h3>
-        <p>Interface Design — Arusai</p>
-      </div>
-      <span class="index-arrow">→</span>
-    </a>
-
-    <!-- ════════════════════════════════ -->
-    <!-- 3D / VFX WORK                   -->
-    <!-- ════════════════════════════════ -->
-    <a href="#modeling" class="index-item reveal reveal-delay-2">
-      <span class="index-num">04</span>
       <div class="index-info">
         <h3>Modeling</h3>
         <p>3D Asset Creation &amp; Mesh Construction</p>
       </div>
       <span class="index-arrow">→</span>
     </a>
-    <a href="#texturing" class="index-item reveal">
-      <span class="index-num">05</span>
+    <a href="#texturing" class="index-item reveal reveal-delay-1">
+      <span class="index-num">03</span>
       <div class="index-info">
         <h3>Texturing</h3>
         <p>Surface Detail &amp; Material Definition</p>
       </div>
       <span class="index-arrow">→</span>
     </a>
-    <a href="#lighting-lookdev" class="index-item reveal reveal-delay-1">
-      <span class="index-num">06</span>
+    <a href="#lighting-lookdev" class="index-item reveal reveal-delay-2">
+      <span class="index-num">04</span>
       <div class="index-info">
         <h3>Lighting &amp; Lookdev</h3>
         <p>Illumination, Mood &amp; Shader Building</p>
       </div>
       <span class="index-arrow">→</span>
     </a>
-    <a href="#simulations" class="index-item reveal reveal-delay-2">
-      <span class="index-num">07</span>
+    <a href="#simulations" class="index-item reveal">
+      <span class="index-num">05</span>
       <div class="index-info">
         <h3>Maya Simulations</h3>
         <p>Dynamics, FX &amp; Procedural Motion</p>
       </div>
       <span class="index-arrow">→</span>
     </a>
-
   </div>
 </section>
 
-<!-- SKILL SECTIONS — built by JS -->
+<!-- SKILL SECTIONS -->
 <div id="skill-sections"></div>
 
 <footer>
@@ -330,148 +378,42 @@ footer { position:relative; z-index:2; padding:60px 48px; border-top:1px solid v
 </footer>
 
 <script>
-/* =================================================================
-   SECTIONS DATA
-   Final order: Logo Design → UI/UX → Modeling → Texturing
-                → Lighting & Lookdev (merged) → Maya Simulations
-
-   HOW TO ADD IMAGES:
-   Put your image files in the SAME folder as portfolio.html.
-   Each section lists the EXACT filenames it expects below.
-================================================================= */
 const sections = [
-
-  /* ═══════════════════════════════════════════════════════════════
-     SECTION 02 — LOGO DESIGN (Arusai)
-     ───────────────────────────────────────────────────────────────
-     IMAGE FILES — place in same folder as portfolio.html:
-       ▸  logo design 1.jpg
-       ▸  logo design 2.jpg
-       ▸  logo design 3.jpg
-  ═══════════════════════════════════════════════════════════════ */
   {
-    id:'logo-design', num:'02', title:'Logo Design',
-    subtitle:'Brand Identity — Arusai',
-    body:`Designed the complete brand identity for Arusai — from concept sketches through to final mark. The logo system balances distinctiveness with versatility, working across digital and print applications while staying true to Arusai's brand personality.`,
-    bullets:['Client: Arusai','Concept development & brand direction','Final mark, colour palette & usage guidelines'],
-    reverse:false,
-    images:[
-      'logo design 1.jpg',   // ◄── IMAGE 1 : logo design 1.jpg
-      'logo design 2.jpg',   // ◄── IMAGE 2 : logo design 2.jpg
-      'logo design 3.jpg',   // ◄── IMAGE 3 : logo design 3.jpg
-    ]
-  },
-
-  /* ═══════════════════════════════════════════════════════════════
-     SECTION 03 — UI/UX (Arusai)
-     ───────────────────────────────────────────────────────────────
-     IMAGE FILES — place in same folder as portfolio.html:
-       ▸  ui ux 1.jpg
-       ▸  ui ux 2.jpg
-       ▸  ui ux 3.jpg
-  ═══════════════════════════════════════════════════════════════ */
-  {
-    id:'uiux', num:'03', title:'UI/UX',
-    subtitle:'Interface Design — Arusai',
-    body:`Designed the UI/UX for Arusai's digital product — from user flows and wireframes through to high-fidelity screens. Every screen is grounded in the brand identity, maintaining visual consistency across the full interface.`,
-    bullets:['Client: Arusai','Wireframes, user flows & prototyping','High-fidelity UI screens & component system'],
-    reverse:true,
-    images:[
-      'ui ux 1.jpg',   // ◄── IMAGE 1 : ui ux 1.jpg
-      'ui ux 2.jpg',   // ◄── IMAGE 2 : ui ux 2.jpg
-      'ui ux 3.jpg',   // ◄── IMAGE 3 : ui ux 3.jpg
-    ]
-  },
-
-  /* ───────────────────────────────────────────────────────────────
-     SECTION 04 — MODELING
-     ───────────────────────────────────────────────────────────────
-     IMAGE FILES — place in same folder as portfolio.html:
-       ▸  modeling 1.jpg
-       ▸  modeling 2.jpg
-       ▸  modeling 3.jpg
-  ─────────────────────────────────────────────────────────────── */
-  {
-    id:'modeling', num:'04', title:'Modeling',
+    id:'modeling', num:'02', title:'Modeling',
     subtitle:'3D Asset Creation — Blender',
     body:`Building clean, production-ready 3D assets entirely in Blender. Focus on solid topology, correct edge flow, and mesh density suited for rendering and shading downstream.`,
     bullets:['Software: Blender','Clean topology & proper edge flow','Hard-surface and organic asset creation'],
     reverse:false,
-    images:[
-      'modeling 1.jpg',   // ◄── IMAGE 1 : modeling 1.jpg
-      'modeling 2.jpg',   // ◄── IMAGE 2 : modeling 2.jpg
-      'modeling 3.jpg',   // ◄── IMAGE 3 : modeling 3.jpg
-    ]
+    images:['modeling 1.jpg','modeling 2.jpg','modeling 3.jpg']
   },
-
-  /* ───────────────────────────────────────────────────────────────
-     SECTION 05 — TEXTURING
-     ───────────────────────────────────────────────────────────────
-     IMAGE FILES — place in same folder as portfolio.html:
-       ▸  texturing 1.jpg
-       ▸  texturing 2.jpg
-       ▸  texturing 3.jpg
-  ─────────────────────────────────────────────────────────────── */
   {
-    id:'texturing', num:'05', title:'Texturing',
+    id:'texturing', num:'03', title:'Texturing',
     subtitle:'Surface Detail & PBR Materials — Blender',
     body:`Creating PBR texture maps and full material setups inside Blender. Every surface is built with attention to real-world material behaviour — roughness, normals, and fine detail that holds up in any light.`,
     bullets:['Software: Blender','UV unwrapping & PBR texture maps','Albedo, roughness, metalness & normal maps'],
     reverse:true,
-    images:[
-      'texturing 1.jpg',   // ◄── IMAGE 1 : texturing 1.jpg
-      'texturing 2.jpg',   // ◄── IMAGE 2 : texturing 2.jpg
-      'texturing 3.jpg',   // ◄── IMAGE 3 : texturing 3.jpg
-    ]
+    images:['texturing 1.jpg','texturing 2.jpg','texturing 3.jpg']
   },
-
-  /* ───────────────────────────────────────────────────────────────
-     SECTION 06 — LIGHTING & LOOKDEV  (merged single section)
-     ───────────────────────────────────────────────────────────────
-     IMAGE FILES — place in same folder as portfolio.html:
-       ▸  lighting lookdev 1.jpg
-       ▸  lighting lookdev 2.jpg
-       ▸  lighting lookdev 3.jpg
-  ─────────────────────────────────────────────────────────────── */
   {
-    id:'lighting-lookdev', num:'06', title:'Lighting & Lookdev',
+    id:'lighting-lookdev', num:'04', title:'Lighting & Lookdev',
     subtitle:'Illumination, Shading & Render Setup — Blender',
     body:`Setting up lights, environment maps, and render passes in Blender alongside full look development using the node-based shader system. Mood-driven lighting that reads clearly on screen, with turntable and in-context renders confirming every asset shades correctly before compositing.`,
     bullets:['Software: Blender (Cycles / EEVEE)','HDRI, area lights & clean AOV render passes','Node-based shader networks & turntable sign-off renders'],
     reverse:false,
-    images:[
-      'lighting lookdev 1.jpg',   // ◄── IMAGE 1 : lighting lookdev 1.jpg
-      'lighting lookdev 2.jpg',   // ◄── IMAGE 2 : lighting lookdev 2.jpg
-      'lighting lookdev 3.jpg',   // ◄── IMAGE 3 : lighting lookdev 3.jpg
-    ]
+    images:['lighting lookdev 1.jpg','lighting lookdev 2.jpg','lighting lookdev 3.jpg']
   },
-
-  /* ───────────────────────────────────────────────────────────────
-     SECTION 07 — MAYA SIMULATIONS
-     ───────────────────────────────────────────────────────────────
-     IMAGE FILES — place in same folder as portfolio.html:
-       ▸  maya simulations 1.jpg
-       ▸  maya simulations 2.jpg
-       ▸  maya simulations 3.jpg
-  ─────────────────────────────────────────────────────────────── */
   {
-    id:'simulations', num:'07', title:'Maya Simulations',
+    id:'simulations', num:'05', title:'Maya Simulations',
     subtitle:'Dynamics & FX — Autodesk Maya',
     body:`All simulation work is done exclusively in Autodesk Maya. Using Maya's dynamics toolset to create cloth, particles, and fluid effects that are art-directed to fit the shot.`,
     bullets:['Software: Autodesk Maya','nCloth, nParticles & Bifrost fluids','Art-directed, shot-specific FX'],
     reverse:true,
-    images:[
-      'maya simulations 1.jpg',   // ◄── IMAGE 1 : maya simulations 1.jpg
-      'maya simulations 2.jpg',   // ◄── IMAGE 2 : maya simulations 2.jpg
-      'maya simulations 3.jpg',   // ◄── IMAGE 3 : maya simulations 3.jpg
-    ]
-  },
-
+    images:['maya simulations 1.jpg','maya simulations 2.jpg','maya simulations 3.jpg']
+  }
 ];
 
-/* =================================================================
-   BUILD SECTIONS
-================================================================= */
+/* ── BUILD SECTIONS ── */
 const container = document.getElementById('skill-sections');
 
 sections.forEach(s => {
@@ -482,12 +424,7 @@ sections.forEach(s => {
   const photoSlots = s.images.map((imgFile, i) => {
     const n = String(i + 1).padStart(2, '0');
     return `
-      <!-- ═══════════════════════════════════════════════════════
-           IMAGE SLOT ${n} — ${s.title.toUpperCase()}
-           FILENAME : ${imgFile}
-           Place this file in the same folder as portfolio.html
-      ══════════════════════════════════════════════════════════ -->
-      <div class="photo-slot placeholder" id="${s.id}-img-${i+1}">
+      <div class="photo-slot placeholder" data-src="${imgFile}" data-section="${s.id}" data-index="${i}">
         <img
           src="${imgFile}"
           alt="${s.title} — ${n}"
@@ -501,6 +438,12 @@ sections.forEach(s => {
         <div class="photo-label">
           <p>${s.title.toUpperCase()} — ${n}</p>
           <small>${imgFile}</small>
+        </div>
+        <div class="zoom-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            <path d="M12 10h-2v2H9v-2H7V9h2V7h1v2h2v1z"/>
+          </svg>
         </div>
       </div>`;
   }).join('');
@@ -528,12 +471,62 @@ sections.forEach(s => {
   container.appendChild(sec);
 });
 
-/* =================================================================
-   INTRO
-================================================================= */
-const introEl = document.getElementById('intro');
-const introBar = document.getElementById('introBar');
-const introNum = document.getElementById('introCounter');
+/* ── LIGHTBOX ── */
+const lightbox    = document.getElementById('lightbox');
+const lbImg       = document.getElementById('lightbox-img');
+const lbClose     = document.getElementById('lightbox-close');
+const lbPrev      = document.getElementById('lb-prev');
+const lbNext      = document.getElementById('lb-next');
+const lbCounter   = document.getElementById('lb-counter');
+
+let currentImages = [];
+let currentIndex  = 0;
+
+function openLightbox(images, index) {
+  currentImages = images;
+  currentIndex  = index;
+  showLbImage();
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function showLbImage() {
+  lbImg.src = currentImages[currentIndex];
+  lbCounter.textContent = `${currentIndex + 1} / ${currentImages.length}`;
+}
+
+lbClose.addEventListener('click', closeLightbox);
+lbPrev.addEventListener('click', () => { currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length; showLbImage(); });
+lbNext.addEventListener('click', () => { currentIndex = (currentIndex + 1) % currentImages.length; showLbImage(); });
+lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', e => {
+  if (!lightbox.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') { currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length; showLbImage(); }
+  if (e.key === 'ArrowRight') { currentIndex = (currentIndex + 1) % currentImages.length; showLbImage(); }
+});
+
+/* Delegate click on photo slots */
+document.addEventListener('click', e => {
+  const slot = e.target.closest('.photo-slot');
+  if (!slot || slot.classList.contains('placeholder')) return;
+  const sectionId = slot.dataset.section;
+  const index     = parseInt(slot.dataset.index);
+  const allSlots  = [...document.querySelectorAll(`.photo-slot[data-section="${sectionId}"]`)].filter(s => !s.classList.contains('placeholder'));
+  const images    = allSlots.map(s => s.dataset.src);
+  const realIndex = allSlots.indexOf(slot);
+  openLightbox(images, realIndex >= 0 ? realIndex : 0);
+});
+
+/* ── INTRO ── */
+const introEl   = document.getElementById('intro');
+const introBar  = document.getElementById('introBar');
+const introNum  = document.getElementById('introCounter');
 const introName = document.getElementById('introName');
 let progress = 0;
 setTimeout(() => { introName.classList.add('show'); }, 200);
@@ -545,10 +538,8 @@ const ticker = setInterval(() => {
   if (progress === 100) setTimeout(() => { introEl.classList.add('hidden'); }, 400);
 }, 60);
 
-/* =================================================================
-   CURSOR
-================================================================= */
-const cur = document.getElementById('cursor');
+/* ── CURSOR ── */
+const cur  = document.getElementById('cursor');
 const ring = document.getElementById('cursor-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
 document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
@@ -564,9 +555,7 @@ document.querySelectorAll('a,button').forEach(el => {
   el.addEventListener('mouseleave', () => { cur.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.opacity = '0.5'; });
 });
 
-/* =================================================================
-   SCROLL REVEAL
-================================================================= */
+/* ── SCROLL REVEAL ── */
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.12 });
