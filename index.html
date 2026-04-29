@@ -23,471 +23,167 @@
   --font-body: 'DM Sans', sans-serif;
   --font-mono: 'DM Mono', monospace;
 }
-
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-
 html { scroll-behavior: smooth; }
-
 body {
-  background: var(--black);
-  color: var(--white);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.6;
-  overflow-x: hidden;
-  cursor: none;
+  background: var(--black); color: var(--white);
+  font-family: var(--font-body); font-size: 16px;
+  line-height: 1.6; overflow-x: hidden; cursor: none;
 }
 
-/* ── CUSTOM CURSOR ───────────────────────────────── */
+/* ── CURSOR ── */
 #cursor {
-  position: fixed; top:0; left:0; z-index:9999;
-  width:10px; height:10px;
-  background: var(--yellow);
-  border-radius: 50%;
-  pointer-events: none;
-  transform: translate(-50%,-50%);
-  transition: transform 0.08s, width 0.2s, height 0.2s, background 0.2s;
+  position:fixed; top:0; left:0; z-index:9999;
+  width:10px; height:10px; background:var(--yellow);
+  border-radius:50%; pointer-events:none; transform:translate(-50%,-50%);
+  transition:transform 0.08s, width 0.2s, height 0.2s;
 }
 #cursor-ring {
-  position: fixed; top:0; left:0; z-index:9998;
-  width:36px; height:36px;
-  border: 1.5px solid var(--yellow);
-  border-radius: 50%;
-  pointer-events: none;
-  transform: translate(-50%,-50%);
-  transition: transform 0.18s ease, width 0.3s, height 0.3s, opacity 0.3s;
-  opacity: 0.5;
+  position:fixed; top:0; left:0; z-index:9998;
+  width:36px; height:36px; border:1.5px solid var(--yellow);
+  border-radius:50%; pointer-events:none; transform:translate(-50%,-50%);
+  transition:transform 0.18s ease, opacity 0.3s; opacity:0.5;
 }
-body:hover #cursor { width:10px; }
 
-/* ── NOISE OVERLAY ───────────────────────────────── */
+/* ── NOISE ── */
 body::before {
-  content:'';
-  position:fixed; inset:0; z-index:1;
-  pointer-events:none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  opacity: 0.4;
+  content:''; position:fixed; inset:0; z-index:1; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:0.4;
 }
 
-/* ── GRID BG ─────────────────────────────────────── */
+/* ── GRID ── */
 .grid-bg {
   position:fixed; inset:0; z-index:0; pointer-events:none;
-  background-image:
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:40px 40px;
 }
 
-/* ── INTRO SCREEN ────────────────────────────────── */
+/* ── INTRO ── */
 #intro {
-  position:fixed; inset:0; z-index:1000;
-  background: var(--black);
-  display:flex; align-items:center; justify-content:center;
-  flex-direction:column; gap:24px;
-  transition: opacity 0.8s ease, visibility 0.8s;
+  position:fixed; inset:0; z-index:1000; background:var(--black);
+  display:flex; align-items:center; justify-content:center; flex-direction:column; gap:24px;
+  transition:opacity 0.8s ease, visibility 0.8s;
 }
 #intro.hidden { opacity:0; visibility:hidden; pointer-events:none; }
-
-.intro-counter {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.3em;
-  color: var(--yellow);
-  text-transform: uppercase;
-}
-.intro-bar-wrap {
-  width: 280px; height: 1px;
-  background: rgba(245,197,24,0.15);
-  position:relative; overflow:hidden;
-}
-.intro-bar {
-  position:absolute; top:0; left:0;
-  height:100%; width:0%;
-  background: var(--yellow);
-  transition: width 0.05s linear;
-}
+.intro-counter { font-family:var(--font-mono); font-size:11px; letter-spacing:0.3em; color:var(--yellow); text-transform:uppercase; }
+.intro-bar-wrap { width:280px; height:1px; background:rgba(245,197,24,0.15); position:relative; overflow:hidden; }
+.intro-bar { position:absolute; top:0; left:0; height:100%; width:0%; background:var(--yellow); transition:width 0.05s linear; }
 .intro-name {
-  font-family: var(--font-display);
-  font-size: clamp(60px,12vw,120px);
-  color: var(--yellow);
-  letter-spacing: 0.05em;
-  line-height:1;
-  opacity:0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  font-family:var(--font-display); font-size:clamp(60px,12vw,120px);
+  color:var(--yellow); letter-spacing:0.05em; line-height:1;
+  opacity:0; transform:translateY(20px); transition:opacity 0.6s ease, transform 0.6s ease;
 }
 .intro-name.show { opacity:1; transform:translateY(0); }
 
-/* ── NAV ─────────────────────────────────────────── */
+/* ── NAV ── */
 nav {
-  position: fixed; top:0; left:0; right:0; z-index:100;
-  padding: 20px 48px;
-  display: flex; align-items:center; justify-content:space-between;
-  background: linear-gradient(180deg, rgba(8,8,8,0.95) 0%, transparent 100%);
-  backdrop-filter: blur(4px);
+  position:fixed; top:0; left:0; right:0; z-index:100; padding:20px 48px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:linear-gradient(180deg,rgba(8,8,8,0.95) 0%,transparent 100%);
+  backdrop-filter:blur(4px);
 }
-.nav-logo {
-  font-family: var(--font-display);
-  font-size: 28px;
-  color: var(--yellow);
-  letter-spacing: 0.1em;
-  text-decoration:none;
-}
+.nav-logo { font-family:var(--font-display); font-size:28px; color:var(--yellow); letter-spacing:0.1em; text-decoration:none; }
 .nav-links { display:flex; gap:36px; list-style:none; }
-.nav-links a {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--white-dim);
-  text-decoration:none;
-  transition: color 0.2s;
-}
-.nav-links a:hover { color: var(--yellow); }
+.nav-links a { font-family:var(--font-mono); font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--white-dim); text-decoration:none; transition:color 0.2s; }
+.nav-links a:hover { color:var(--yellow); }
 
-/* ── HERO ────────────────────────────────────────── */
-#hero {
-  position:relative; z-index:2;
-  min-height:100vh;
-  display:flex; align-items:center;
-  padding: 0 48px;
-  overflow:hidden;
-}
+/* ── HERO ── */
+#hero { position:relative; z-index:2; min-height:100vh; display:flex; align-items:center; padding:0 48px; overflow:hidden; }
 .hero-content { position:relative; z-index:2; max-width:760px; }
-
-.hero-eyebrow {
-  display:inline-flex; align-items:center; gap:12px;
-  margin-bottom: 24px;
-}
-.hero-eyebrow-line {
-  width:40px; height:1px; background:var(--yellow);
-}
-.hero-eyebrow span {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.3em;
-  color: var(--yellow);
-  text-transform: uppercase;
-}
-
-.hero-name {
-  font-family: var(--font-display);
-  font-size: clamp(80px, 14vw, 160px);
-  line-height: 0.9;
-  color: var(--white);
-  letter-spacing: 0.02em;
-}
-.hero-name .yellow { color: var(--yellow); }
-
+.hero-eyebrow { display:inline-flex; align-items:center; gap:12px; margin-bottom:24px; }
+.hero-eyebrow-line { width:40px; height:1px; background:var(--yellow); }
+.hero-eyebrow span { font-family:var(--font-mono); font-size:11px; letter-spacing:0.3em; color:var(--yellow); text-transform:uppercase; }
+.hero-name { font-family:var(--font-display); font-size:clamp(80px,14vw,160px); line-height:0.9; color:var(--white); letter-spacing:0.02em; }
+.hero-name .yellow { color:var(--yellow); }
 .hero-title {
-  margin-top: 28px;
-  display:inline-block;
-  padding: 10px 22px;
-  border: 1px solid var(--yellow);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--yellow);
-  position:relative;
-  overflow:hidden;
-}
-.hero-title::before {
-  content:'';
-  position:absolute; inset:0;
-  background: var(--yellow-glow);
-  transform: scaleX(0); transform-origin:left;
-  transition: transform 0.4s ease;
-}
-.hero-title:hover::before { transform:scaleX(1); }
-
-.hero-desc {
-  margin-top: 32px;
-  max-width: 480px;
-  color: var(--white-dim);
-  font-size: 15px;
-  line-height: 1.7;
-}
-
-.hero-cta {
-  margin-top: 48px;
-  display:flex; gap:20px; align-items:center;
-}
-.btn-primary {
-  padding: 14px 36px;
-  background: var(--yellow);
-  color: var(--black);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform:uppercase;
-  text-decoration:none;
-  font-weight: 600;
-  display:inline-block;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(245,197,24,0.3);
-}
-.btn-ghost {
-  padding: 14px 36px;
-  border: 1px solid var(--white-dim);
-  color: var(--white-dim);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform:uppercase;
-  text-decoration:none;
-  display:inline-block;
-  transition: border-color 0.2s, color 0.2s;
-}
-.btn-ghost:hover { border-color:var(--yellow); color:var(--yellow); }
-
-/* Big BG text */
-.hero-bg-text {
-  position:absolute; right:-40px; top:50%;
-  transform:translateY(-50%);
-  font-family: var(--font-display);
-  font-size: clamp(180px, 28vw, 360px);
-  color: rgba(245,197,24,0.04);
-  letter-spacing: -0.02em;
-  pointer-events:none;
-  user-select:none;
-  white-space:nowrap;
-  z-index:1;
-}
-
-/* Hero scroll indicator */
-.scroll-hint {
-  position:absolute; bottom:36px; left:48px;
-  display:flex; align-items:center; gap:12px;
-}
-.scroll-hint-line {
-  width:1px; height:48px;
-  background: linear-gradient(180deg, var(--yellow) 0%, transparent 100%);
-  animation: scrollPulse 1.8s ease-in-out infinite;
-}
-@keyframes scrollPulse {
-  0%,100% { opacity:0.3; transform:scaleY(1); }
-  50% { opacity:1; transform:scaleY(1.2); }
-}
-.scroll-hint span {
-  font-family:var(--font-mono); font-size:9px;
-  letter-spacing:0.3em; text-transform:uppercase;
-  color:var(--white-dim);
-  writing-mode:vertical-rl;
-}
-
-/* ── INDEX SECTION ───────────────────────────────── */
-#index {
-  position:relative; z-index:2;
-  padding: 80px 48px;
-  border-top: 1px solid var(--black-border);
-}
-.index-header {
-  display:flex; align-items:baseline; gap:24px; margin-bottom:48px;
-}
-.section-label {
-  font-family:var(--font-mono); font-size:10px;
-  letter-spacing:0.3em; text-transform:uppercase;
-  color:var(--yellow); opacity:0.7;
-}
-.section-title {
-  font-family:var(--font-display);
-  font-size: clamp(36px, 6vw, 64px);
-  color:var(--white); letter-spacing:0.05em;
-}
-
-.index-grid {
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap:2px;
-}
-.index-item {
-  padding: 28px 32px;
-  background: var(--black-card);
-  border: 1px solid transparent;
-  display:flex; align-items:center; gap:20px;
-  text-decoration:none;
-  transition: background 0.25s, border-color 0.25s, transform 0.25s;
+  margin-top:28px; display:inline-block; padding:10px 22px;
+  border:1px solid var(--yellow); font-family:var(--font-mono); font-size:12px;
+  letter-spacing:0.25em; text-transform:uppercase; color:var(--yellow);
   position:relative; overflow:hidden;
 }
-.index-item::before {
-  content:'';
-  position:absolute; left:0; top:0; bottom:0;
-  width:3px; background:var(--yellow);
-  transform:scaleY(0); transform-origin:bottom;
-  transition: transform 0.3s ease;
-}
+.hero-title::before { content:''; position:absolute; inset:0; background:var(--yellow-glow); transform:scaleX(0); transform-origin:left; transition:transform 0.4s ease; }
+.hero-title:hover::before { transform:scaleX(1); }
+.hero-desc { margin-top:32px; max-width:480px; color:var(--white-dim); font-size:15px; line-height:1.7; }
+.hero-cta { margin-top:48px; display:flex; gap:20px; align-items:center; }
+.btn-primary { padding:14px 36px; background:var(--yellow); color:var(--black); font-family:var(--font-mono); font-size:11px; letter-spacing:0.2em; text-transform:uppercase; text-decoration:none; font-weight:600; display:inline-block; transition:transform 0.2s, box-shadow 0.2s; }
+.btn-primary:hover { transform:translateY(-2px); box-shadow:0 12px 40px rgba(245,197,24,0.3); }
+.btn-ghost { padding:14px 36px; border:1px solid var(--white-dim); color:var(--white-dim); font-family:var(--font-mono); font-size:11px; letter-spacing:0.2em; text-transform:uppercase; text-decoration:none; display:inline-block; transition:border-color 0.2s, color 0.2s; }
+.btn-ghost:hover { border-color:var(--yellow); color:var(--yellow); }
+.hero-bg-text { position:absolute; right:-40px; top:50%; transform:translateY(-50%); font-family:var(--font-display); font-size:clamp(180px,28vw,360px); color:rgba(245,197,24,0.04); pointer-events:none; user-select:none; white-space:nowrap; z-index:1; }
+.scroll-hint { position:absolute; bottom:36px; left:48px; display:flex; align-items:center; gap:12px; }
+.scroll-hint-line { width:1px; height:48px; background:linear-gradient(180deg,var(--yellow) 0%,transparent 100%); animation:scrollPulse 1.8s ease-in-out infinite; }
+@keyframes scrollPulse { 0%,100%{opacity:0.3;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.2)} }
+.scroll-hint span { font-family:var(--font-mono); font-size:9px; letter-spacing:0.3em; text-transform:uppercase; color:var(--white-dim); writing-mode:vertical-rl; }
+
+/* ── INDEX ── */
+#index { position:relative; z-index:2; padding:80px 48px; border-top:1px solid var(--black-border); }
+.index-header { display:flex; align-items:baseline; gap:24px; margin-bottom:48px; }
+.section-label { font-family:var(--font-mono); font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color:var(--yellow); opacity:0.7; }
+.section-title { font-family:var(--font-display); font-size:clamp(36px,6vw,64px); color:var(--white); letter-spacing:0.05em; }
+.index-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+.index-item { padding:28px 32px; background:var(--black-card); border:1px solid transparent; display:flex; align-items:center; gap:20px; text-decoration:none; transition:background 0.25s, border-color 0.25s, transform 0.25s; position:relative; overflow:hidden; }
+.index-item::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--yellow); transform:scaleY(0); transform-origin:bottom; transition:transform 0.3s ease; }
 .index-item:hover::before { transform:scaleY(1); }
-.index-item:hover {
-  background: var(--yellow-faint);
-  border-color: var(--black-border);
-  transform: translateX(4px);
-}
-.index-num {
-  font-family:var(--font-display); font-size:42px;
-  color:var(--yellow); opacity:0.3; line-height:1;
-  min-width:52px;
-}
-.index-info h3 {
-  font-family:var(--font-display); font-size:22px;
-  color:var(--white); letter-spacing:0.05em;
-}
-.index-info p {
-  font-size:12px; color:var(--white-dim);
-  margin-top:4px; line-height:1.4;
-}
-.index-arrow {
-  margin-left:auto; color:var(--yellow);
-  opacity:0; transition:opacity 0.2s, transform 0.2s;
-  font-size:18px;
-}
+.index-item:hover { background:var(--yellow-faint); border-color:var(--black-border); transform:translateX(4px); }
+.index-num { font-family:var(--font-display); font-size:42px; color:var(--yellow); opacity:0.3; line-height:1; min-width:52px; }
+.index-info h3 { font-family:var(--font-display); font-size:22px; color:var(--white); letter-spacing:0.05em; }
+.index-info p { font-size:12px; color:var(--white-dim); margin-top:4px; line-height:1.4; }
+.index-arrow { margin-left:auto; color:var(--yellow); opacity:0; transition:opacity 0.2s, transform 0.2s; font-size:18px; }
 .index-item:hover .index-arrow { opacity:1; transform:translateX(4px); }
 
-/* ── SKILL SECTIONS ──────────────────────────────── */
-.skill-section {
-  position:relative; z-index:2;
-  padding: 100px 48px;
-  border-top: 1px solid var(--black-border);
-  overflow:hidden;
-}
-.skill-section:nth-child(even) { background: var(--black-mid); }
-
-.skill-inner {
-  max-width: 1200px; margin:0 auto;
-  display:grid; grid-template-columns: 1fr 1fr;
-  gap:80px; align-items:start;
-}
+/* ── SKILL SECTIONS ── */
+.skill-section { position:relative; z-index:2; padding:100px 48px; border-top:1px solid var(--black-border); overflow:hidden; }
+.skill-section:nth-child(even) { background:var(--black-mid); }
+.skill-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:start; }
 .skill-inner.reverse { direction:rtl; }
 .skill-inner.reverse > * { direction:ltr; }
-
 .skill-header { margin-bottom:32px; }
-.skill-num {
-  font-family:var(--font-display); font-size:120px;
-  color: rgba(245,197,24,0.07); line-height:0.85;
-  margin-bottom:-20px; margin-left:-8px;
-  pointer-events:none; user-select:none;
-}
-.skill-title {
-  font-family:var(--font-display);
-  font-size: clamp(40px, 6vw, 72px);
-  color:var(--white); letter-spacing:0.05em;
-  line-height:1;
-}
-.skill-title-bar {
-  margin-top:10px; margin-bottom:20px;
-  height:3px; width:60px; background:var(--yellow);
-  transition: width 0.4s ease;
-}
+.skill-num { font-family:var(--font-display); font-size:120px; color:rgba(245,197,24,0.07); line-height:0.85; margin-bottom:-20px; margin-left:-8px; pointer-events:none; user-select:none; }
+.skill-title { font-family:var(--font-display); font-size:clamp(40px,6vw,72px); color:var(--white); letter-spacing:0.05em; line-height:1; }
+.skill-title-bar { margin-top:10px; margin-bottom:20px; height:3px; width:60px; background:var(--yellow); transition:width 0.4s ease; }
 .skill-section:hover .skill-title-bar { width:120px; }
-.skill-subtitle {
-  font-family:var(--font-mono); font-size:11px;
-  letter-spacing:0.2em; text-transform:uppercase;
-  color:var(--yellow); opacity:0.8;
-  margin-bottom:24px;
-}
-.skill-body {
-  color:var(--white-dim); font-size:15px;
-  line-height:1.8; margin-bottom:28px;
-}
+.skill-subtitle { font-family:var(--font-mono); font-size:11px; letter-spacing:0.2em; text-transform:uppercase; color:var(--yellow); opacity:0.8; margin-bottom:24px; }
+.skill-body { color:var(--white-dim); font-size:15px; line-height:1.8; margin-bottom:28px; }
 .skill-bullets { list-style:none; display:flex; flex-direction:column; gap:10px; }
-.skill-bullets li {
-  display:flex; align-items:center; gap:12px;
-  font-size:13px; color:var(--white-dim);
-}
-.skill-bullets li::before {
-  content:'';
-  width:20px; height:1px; background:var(--yellow); flex-shrink:0;
-}
+.skill-bullets li { display:flex; align-items:center; gap:12px; font-size:13px; color:var(--white-dim); }
+.skill-bullets li::before { content:''; width:20px; height:1px; background:var(--yellow); flex-shrink:0; }
 
-/* Photos */
+/* ── PHOTO SLOTS (3 per section) ── */
 .skill-photos { display:flex; flex-direction:column; gap:16px; }
-.photo-slot {
-  background: var(--black-card);
-  border: 1px solid var(--black-border);
-  aspect-ratio: 16/9;
-  position:relative; overflow:hidden;
-  display:flex; align-items:center; justify-content:center;
-  transition: border-color 0.3s, transform 0.3s;
-}
-.photo-slot:hover {
-  border-color: var(--yellow);
-  transform: scale(1.01);
-}
-.photo-slot::before {
-  content:'';
-  position:absolute; inset:0;
-  background: linear-gradient(135deg, transparent 45%, rgba(245,197,24,0.04) 100%);
-}
-/* Diagonal cross lines */
-.photo-slot::after {
-  content:'';
-  position:absolute; inset:0;
+.photo-slot { background:var(--black-card); border:1px solid var(--black-border); aspect-ratio:16/9; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; transition:border-color 0.3s, transform 0.3s; }
+.photo-slot:hover { border-color:var(--yellow); transform:scale(1.01); }
+.photo-slot img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+.photo-slot::before { content:''; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(135deg,transparent 45%,rgba(245,197,24,0.04) 100%); }
+.photo-slot.placeholder::after {
+  content:''; position:absolute; inset:0;
   background:
-    linear-gradient(to bottom right, transparent calc(50% - 0.5px), rgba(245,197,24,0.08) calc(50% - 0.5px), rgba(245,197,24,0.08) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
-    linear-gradient(to bottom left, transparent calc(50% - 0.5px), rgba(245,197,24,0.08) calc(50% - 0.5px), rgba(245,197,24,0.08) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+    linear-gradient(to bottom right,transparent calc(50% - 0.5px),rgba(245,197,24,0.08) calc(50% - 0.5px),rgba(245,197,24,0.08) calc(50% + 0.5px),transparent calc(50% + 0.5px)),
+    linear-gradient(to bottom left,transparent calc(50% - 0.5px),rgba(245,197,24,0.08) calc(50% - 0.5px),rgba(245,197,24,0.08) calc(50% + 0.5px),transparent calc(50% + 0.5px));
 }
-.photo-label {
-  position:relative; z-index:1;
-  text-align:center;
-}
-.photo-label p {
-  font-family:var(--font-mono); font-size:10px;
-  letter-spacing:0.25em; text-transform:uppercase;
-  color:var(--yellow); opacity:0.6;
-}
-.photo-label small {
-  display:block; margin-top:6px;
-  font-size:9px; letter-spacing:0.15em;
-  text-transform:uppercase;
-  color: var(--white-dim); opacity:0.4;
-}
-.photo-corner {
-  position:absolute;
-  width:12px; height:12px;
-}
+.photo-label { position:relative; z-index:2; text-align:center; }
+.photo-label p { font-family:var(--font-mono); font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:var(--yellow); opacity:0.6; }
+.photo-label small { display:block; margin-top:6px; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--white-dim); opacity:0.4; }
+.photo-corner { position:absolute; width:12px; height:12px; z-index:3; }
 .photo-corner.tl { top:8px; left:8px; border-top:1px solid var(--yellow); border-left:1px solid var(--yellow); }
 .photo-corner.tr { top:8px; right:8px; border-top:1px solid var(--yellow); border-right:1px solid var(--yellow); }
 .photo-corner.bl { bottom:8px; left:8px; border-bottom:1px solid var(--yellow); border-left:1px solid var(--yellow); }
 .photo-corner.br { bottom:8px; right:8px; border-bottom:1px solid var(--yellow); border-right:1px solid var(--yellow); }
 
-/* ── FOOTER ──────────────────────────────────────── */
-footer {
-  position:relative; z-index:2;
-  padding: 60px 48px;
-  border-top: 1px solid var(--black-border);
-  display:flex; justify-content:space-between; align-items:center;
-}
-.footer-name {
-  font-family:var(--font-display); font-size:40px;
-  color:var(--yellow); letter-spacing:0.08em;
-}
-.footer-right {
-  text-align:right;
-  font-family:var(--font-mono); font-size:10px;
-  letter-spacing:0.2em; text-transform:uppercase;
-  color:var(--white-dim); line-height:2;
-}
+/* ── FOOTER ── */
+footer { position:relative; z-index:2; padding:60px 48px; border-top:1px solid var(--black-border); display:flex; justify-content:space-between; align-items:center; }
+.footer-name { font-family:var(--font-display); font-size:40px; color:var(--yellow); letter-spacing:0.08em; }
+.footer-right { text-align:right; font-family:var(--font-mono); font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--white-dim); line-height:2; }
 
-/* ── SCROLL ANIMATIONS ───────────────────────────── */
-.reveal {
-  opacity:0; transform: translateY(40px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
+/* ── REVEAL ── */
+.reveal { opacity:0; transform:translateY(40px); transition:opacity 0.7s ease, transform 0.7s ease; }
 .reveal.visible { opacity:1; transform:translateY(0); }
 .reveal-delay-1 { transition-delay:0.1s; }
 .reveal-delay-2 { transition-delay:0.2s; }
 .reveal-delay-3 { transition-delay:0.3s; }
+.section-stripe { position:absolute; top:0; right:0; bottom:0; width:4px; background:var(--yellow); opacity:0.06; }
 
-/* ── BG DECO STRIPE ──────────────────────────────── */
-.section-stripe {
-  position:absolute; top:0; right:0; bottom:0;
-  width:4px; background:var(--yellow); opacity:0.06;
-}
-
-/* ── RESPONSIVE ──────────────────────────────────── */
+/* ── RESPONSIVE ── */
 @media (max-width:900px) {
   nav { padding:16px 24px; }
   .nav-links { display:none; }
@@ -508,12 +204,10 @@ footer {
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
 
-<!-- INTRO ANIMATION -->
+<!-- INTRO -->
 <div id="intro">
   <div class="intro-name" id="introName">SARAN S.</div>
-  <div class="intro-bar-wrap">
-    <div class="intro-bar" id="introBar"></div>
-  </div>
+  <div class="intro-bar-wrap"><div class="intro-bar" id="introBar"></div></div>
   <div class="intro-counter" id="introCounter">LOADING — 0%</div>
 </div>
 
@@ -522,10 +216,12 @@ footer {
   <a href="#hero" class="nav-logo">SS.</a>
   <ul class="nav-links">
     <li><a href="#index">Index</a></li>
+    <li><a href="#logo-design">Logo Design</a></li>
+    <li><a href="#uiux">UI/UX</a></li>
     <li><a href="#modeling">Modeling</a></li>
     <li><a href="#texturing">Texturing</a></li>
-    <li><a href="#lighting">Lighting</a></li>
-    <li><a href="#cg">CG Integration</a></li>
+    <li><a href="#lighting-lookdev">Lighting &amp; Lookdev</a></li>
+    <li><a href="#simulations">Maya Sims</a></li>
   </ul>
 </nav>
 
@@ -536,9 +232,7 @@ footer {
       <div class="hero-eyebrow-line"></div>
       <span>VFX Portfolio — 2026</span>
     </div>
-    <h1 class="hero-name reveal reveal-delay-1">
-      SARAN <span class="yellow">S.</span>
-    </h1>
+    <h1 class="hero-name reveal reveal-delay-1">SARAN <span class="yellow">S.</span></h1>
     <div class="hero-title reveal reveal-delay-2">Animation &amp; VFX Student</div>
     <p class="hero-desc reveal reveal-delay-3">
       Currently pursuing a degree in Animation &amp; Visual Effects, specialising in compositing and CG integration.
@@ -546,7 +240,7 @@ footer {
     </p>
     <div class="hero-cta reveal reveal-delay-3">
       <a href="#index" class="btn-primary">View Work</a>
-      <a href="#cg" class="btn-ghost">CG Integration</a>
+      <a href="#simulations" class="btn-ghost">Maya Simulations</a>
     </div>
   </div>
   <div class="hero-bg-text" aria-hidden="true">VFX</div>
@@ -563,135 +257,67 @@ footer {
     <h2 class="section-title reveal">INDEX</h2>
   </div>
   <div class="index-grid">
-    <a href="#modeling" class="index-item reveal">
+
+    <!-- ════════════════════════════════ -->
+    <!-- GRAPHICS WORK — ARUSAI (top)    -->
+    <!-- ════════════════════════════════ -->
+    <a href="#logo-design" class="index-item reveal">
       <span class="index-num">02</span>
+      <div class="index-info">
+        <h3>Logo Design</h3>
+        <p>Brand Identity — Arusai</p>
+      </div>
+      <span class="index-arrow">→</span>
+    </a>
+    <a href="#uiux" class="index-item reveal reveal-delay-1">
+      <span class="index-num">03</span>
+      <div class="index-info">
+        <h3>UI/UX</h3>
+        <p>Interface Design — Arusai</p>
+      </div>
+      <span class="index-arrow">→</span>
+    </a>
+
+    <!-- ════════════════════════════════ -->
+    <!-- 3D / VFX WORK                   -->
+    <!-- ════════════════════════════════ -->
+    <a href="#modeling" class="index-item reveal reveal-delay-2">
+      <span class="index-num">04</span>
       <div class="index-info">
         <h3>Modeling</h3>
         <p>3D Asset Creation &amp; Mesh Construction</p>
       </div>
       <span class="index-arrow">→</span>
     </a>
-    <a href="#texturing" class="index-item reveal reveal-delay-1">
-      <span class="index-num">03</span>
+    <a href="#texturing" class="index-item reveal">
+      <span class="index-num">05</span>
       <div class="index-info">
         <h3>Texturing</h3>
         <p>Surface Detail &amp; Material Definition</p>
       </div>
       <span class="index-arrow">→</span>
     </a>
-    <a href="#lighting" class="index-item reveal reveal-delay-2">
-      <span class="index-num">04</span>
-      <div class="index-info">
-        <h3>Lighting</h3>
-        <p>Illumination, Mood &amp; Render Setup</p>
-      </div>
-      <span class="index-arrow">→</span>
-    </a>
-    <a href="#lookdev" class="index-item reveal">
-      <span class="index-num">05</span>
-      <div class="index-info">
-        <h3>Lookdev</h3>
-        <p>Look Development &amp; Shader Building</p>
-      </div>
-      <span class="index-arrow">→</span>
-    </a>
-    <a href="#simulations" class="index-item reveal reveal-delay-1">
+    <a href="#lighting-lookdev" class="index-item reveal reveal-delay-1">
       <span class="index-num">06</span>
+      <div class="index-info">
+        <h3>Lighting &amp; Lookdev</h3>
+        <p>Illumination, Mood &amp; Shader Building</p>
+      </div>
+      <span class="index-arrow">→</span>
+    </a>
+    <a href="#simulations" class="index-item reveal reveal-delay-2">
+      <span class="index-num">07</span>
       <div class="index-info">
         <h3>Maya Simulations</h3>
         <p>Dynamics, FX &amp; Procedural Motion</p>
       </div>
       <span class="index-arrow">→</span>
     </a>
-    <a href="#roto" class="index-item reveal reveal-delay-2">
-      <span class="index-num">07</span>
-      <div class="index-info">
-        <h3>Roto</h3>
-        <p>Rotoscoping &amp; Matte Extraction</p>
-      </div>
-      <span class="index-arrow">→</span>
-    </a>
-    <a href="#cleanup" class="index-item reveal">
-      <span class="index-num">08</span>
-      <div class="index-info">
-        <h3>Cleanup</h3>
-        <p>Paint Prep &amp; Plate Restoration</p>
-      </div>
-      <span class="index-arrow">→</span>
-    </a>
-    <a href="#cg" class="index-item reveal reveal-delay-1">
-      <span class="index-num">09</span>
-      <div class="index-info">
-        <h3>CG Integration</h3>
-        <p>Seamless Compositing into Live Action</p>
-      </div>
-      <span class="index-arrow">→</span>
-    </a>
+
   </div>
 </section>
 
-<!-- SKILL SECTIONS -->
-<script>
-const sections = [
-  {
-    id:'modeling', num:'02', title:'Modeling',
-    subtitle:'3D Asset Creation — Blender',
-    body:`Building clean, production-ready 3D assets entirely in Blender. Focus on solid topology, correct edge flow, and mesh density suited for rendering and shading downstream.`,
-    bullets:['Software: Blender','Clean topology & proper edge flow','Hard-surface and organic asset creation'],
-    reverse:false
-  },
-  {
-    id:'texturing', num:'03', title:'Texturing',
-    subtitle:'Surface Detail & PBR Materials — Blender',
-    body:`Creating PBR texture maps and full material setups inside Blender. Every surface is built with attention to real-world material behaviour — roughness, normals, and fine detail that holds up in any light.`,
-    bullets:['Software: Blender','UV unwrapping & PBR texture maps','Albedo, roughness, metalness & normal maps'],
-    reverse:true
-  },
-  {
-    id:'lighting', num:'04', title:'Lighting',
-    subtitle:'Illumination & Render Setup — Blender',
-    body:`Setting up lights, environment maps, and render passes entirely in Blender. Building mood-driven lighting that reads clearly on screen and prepares clean AOVs for compositing.`,
-    bullets:['Software: Blender (Cycles / EEVEE)','HDRI and area light setups','Clean render pass output for compositing'],
-    reverse:false
-  },
-  {
-    id:'lookdev', num:'05', title:'Lookdev',
-    subtitle:'Look Development & Shading — Blender',
-    body:`Developing final asset looks using Blender's node-based shader system. Turntable renders and context renders confirm the shading reads correctly before handoff to compositing.`,
-    bullets:['Software: Blender','Node-based shader network building','Turntable & in-context sign-off renders'],
-    reverse:true
-  },
-  {
-    id:'simulations', num:'06', title:'Maya Sims',
-    subtitle:'Dynamics & FX — Autodesk Maya',
-    body:`All simulation work is done exclusively in Autodesk Maya. Using Maya's dynamics toolset to create cloth, particles, and fluid effects that are art-directed to fit the shot.`,
-    bullets:['Software: Autodesk Maya','nCloth, nParticles & Bifrost fluids','Art-directed, shot-specific FX'],
-    reverse:false
-  },
-  {
-    id:'roto', num:'07', title:'Roto',
-    subtitle:'Rotoscoping & Matte Extraction — Nuke',
-    body:`All roto work is done in Nuke. Building accurate, frame-consistent mattes with well-organised shape hierarchies. Clean edge treatment and motion blur handling on fast-moving shots.`,
-    bullets:['Software: Nuke','Accurate per-frame matte extraction','Motion blur & edge feathering control'],
-    reverse:true
-  },
-  {
-    id:'cleanup', num:'08', title:'Cleanup',
-    subtitle:'Paint & Rig Removal — Nuke',
-    body:`Paint and cleanup work fully handled in Nuke. Removing rigs, wires, tracking markers, and continuity errors using clone, reveal, and motion-tracked patch techniques.`,
-    bullets:['Software: Nuke','Rig, wire & tracking marker removal','Motion-tracked patches for long takes'],
-    reverse:false
-  },
-  {
-    id:'cg', num:'09', title:'CG Integration',
-    subtitle:'Compositing & Camera Tracking — Nuke',
-    body:`Full CG integration pipeline in Nuke — from camera tracking and multi-layer EXR compositing to final grade and atmosphere matching. Making CG feel like it was photographed, not rendered.`,
-    bullets:['Software: Nuke','Camera tracking & multi-layer EXR compositing','Colour, grain & lens distortion matching'],
-    reverse:true
-  },
-];
-</script>
-
+<!-- SKILL SECTIONS — built by JS -->
 <div id="skill-sections"></div>
 
 <footer>
@@ -704,12 +330,181 @@ const sections = [
 </footer>
 
 <script>
-// ── Build skill sections ─────────────────────────
+/* =================================================================
+   SECTIONS DATA
+   Final order: Logo Design → UI/UX → Modeling → Texturing
+                → Lighting & Lookdev (merged) → Maya Simulations
+
+   HOW TO ADD IMAGES:
+   Put your image files in the SAME folder as portfolio.html.
+   Each section lists the EXACT filenames it expects below.
+================================================================= */
+const sections = [
+
+  /* ═══════════════════════════════════════════════════════════════
+     SECTION 02 — LOGO DESIGN (Arusai)
+     ───────────────────────────────────────────────────────────────
+     IMAGE FILES — place in same folder as portfolio.html:
+       ▸  logo design 1.jpg
+       ▸  logo design 2.jpg
+       ▸  logo design 3.jpg
+  ═══════════════════════════════════════════════════════════════ */
+  {
+    id:'logo-design', num:'02', title:'Logo Design',
+    subtitle:'Brand Identity — Arusai',
+    body:`Designed the complete brand identity for Arusai — from concept sketches through to final mark. The logo system balances distinctiveness with versatility, working across digital and print applications while staying true to Arusai's brand personality.`,
+    bullets:['Client: Arusai','Concept development & brand direction','Final mark, colour palette & usage guidelines'],
+    reverse:false,
+    images:[
+      'logo design 1.jpg',   // ◄── IMAGE 1 : logo design 1.jpg
+      'logo design 2.jpg',   // ◄── IMAGE 2 : logo design 2.jpg
+      'logo design 3.jpg',   // ◄── IMAGE 3 : logo design 3.jpg
+    ]
+  },
+
+  /* ═══════════════════════════════════════════════════════════════
+     SECTION 03 — UI/UX (Arusai)
+     ───────────────────────────────────────────────────────────────
+     IMAGE FILES — place in same folder as portfolio.html:
+       ▸  ui ux 1.jpg
+       ▸  ui ux 2.jpg
+       ▸  ui ux 3.jpg
+  ═══════════════════════════════════════════════════════════════ */
+  {
+    id:'uiux', num:'03', title:'UI/UX',
+    subtitle:'Interface Design — Arusai',
+    body:`Designed the UI/UX for Arusai's digital product — from user flows and wireframes through to high-fidelity screens. Every screen is grounded in the brand identity, maintaining visual consistency across the full interface.`,
+    bullets:['Client: Arusai','Wireframes, user flows & prototyping','High-fidelity UI screens & component system'],
+    reverse:true,
+    images:[
+      'ui ux 1.jpg',   // ◄── IMAGE 1 : ui ux 1.jpg
+      'ui ux 2.jpg',   // ◄── IMAGE 2 : ui ux 2.jpg
+      'ui ux 3.jpg',   // ◄── IMAGE 3 : ui ux 3.jpg
+    ]
+  },
+
+  /* ───────────────────────────────────────────────────────────────
+     SECTION 04 — MODELING
+     ───────────────────────────────────────────────────────────────
+     IMAGE FILES — place in same folder as portfolio.html:
+       ▸  modeling 1.jpg
+       ▸  modeling 2.jpg
+       ▸  modeling 3.jpg
+  ─────────────────────────────────────────────────────────────── */
+  {
+    id:'modeling', num:'04', title:'Modeling',
+    subtitle:'3D Asset Creation — Blender',
+    body:`Building clean, production-ready 3D assets entirely in Blender. Focus on solid topology, correct edge flow, and mesh density suited for rendering and shading downstream.`,
+    bullets:['Software: Blender','Clean topology & proper edge flow','Hard-surface and organic asset creation'],
+    reverse:false,
+    images:[
+      'modeling 1.jpg',   // ◄── IMAGE 1 : modeling 1.jpg
+      'modeling 2.jpg',   // ◄── IMAGE 2 : modeling 2.jpg
+      'modeling 3.jpg',   // ◄── IMAGE 3 : modeling 3.jpg
+    ]
+  },
+
+  /* ───────────────────────────────────────────────────────────────
+     SECTION 05 — TEXTURING
+     ───────────────────────────────────────────────────────────────
+     IMAGE FILES — place in same folder as portfolio.html:
+       ▸  texturing 1.jpg
+       ▸  texturing 2.jpg
+       ▸  texturing 3.jpg
+  ─────────────────────────────────────────────────────────────── */
+  {
+    id:'texturing', num:'05', title:'Texturing',
+    subtitle:'Surface Detail & PBR Materials — Blender',
+    body:`Creating PBR texture maps and full material setups inside Blender. Every surface is built with attention to real-world material behaviour — roughness, normals, and fine detail that holds up in any light.`,
+    bullets:['Software: Blender','UV unwrapping & PBR texture maps','Albedo, roughness, metalness & normal maps'],
+    reverse:true,
+    images:[
+      'texturing 1.jpg',   // ◄── IMAGE 1 : texturing 1.jpg
+      'texturing 2.jpg',   // ◄── IMAGE 2 : texturing 2.jpg
+      'texturing 3.jpg',   // ◄── IMAGE 3 : texturing 3.jpg
+    ]
+  },
+
+  /* ───────────────────────────────────────────────────────────────
+     SECTION 06 — LIGHTING & LOOKDEV  (merged single section)
+     ───────────────────────────────────────────────────────────────
+     IMAGE FILES — place in same folder as portfolio.html:
+       ▸  lighting lookdev 1.jpg
+       ▸  lighting lookdev 2.jpg
+       ▸  lighting lookdev 3.jpg
+  ─────────────────────────────────────────────────────────────── */
+  {
+    id:'lighting-lookdev', num:'06', title:'Lighting & Lookdev',
+    subtitle:'Illumination, Shading & Render Setup — Blender',
+    body:`Setting up lights, environment maps, and render passes in Blender alongside full look development using the node-based shader system. Mood-driven lighting that reads clearly on screen, with turntable and in-context renders confirming every asset shades correctly before compositing.`,
+    bullets:['Software: Blender (Cycles / EEVEE)','HDRI, area lights & clean AOV render passes','Node-based shader networks & turntable sign-off renders'],
+    reverse:false,
+    images:[
+      'lighting lookdev 1.jpg',   // ◄── IMAGE 1 : lighting lookdev 1.jpg
+      'lighting lookdev 2.jpg',   // ◄── IMAGE 2 : lighting lookdev 2.jpg
+      'lighting lookdev 3.jpg',   // ◄── IMAGE 3 : lighting lookdev 3.jpg
+    ]
+  },
+
+  /* ───────────────────────────────────────────────────────────────
+     SECTION 07 — MAYA SIMULATIONS
+     ───────────────────────────────────────────────────────────────
+     IMAGE FILES — place in same folder as portfolio.html:
+       ▸  maya simulations 1.jpg
+       ▸  maya simulations 2.jpg
+       ▸  maya simulations 3.jpg
+  ─────────────────────────────────────────────────────────────── */
+  {
+    id:'simulations', num:'07', title:'Maya Simulations',
+    subtitle:'Dynamics & FX — Autodesk Maya',
+    body:`All simulation work is done exclusively in Autodesk Maya. Using Maya's dynamics toolset to create cloth, particles, and fluid effects that are art-directed to fit the shot.`,
+    bullets:['Software: Autodesk Maya','nCloth, nParticles & Bifrost fluids','Art-directed, shot-specific FX'],
+    reverse:true,
+    images:[
+      'maya simulations 1.jpg',   // ◄── IMAGE 1 : maya simulations 1.jpg
+      'maya simulations 2.jpg',   // ◄── IMAGE 2 : maya simulations 2.jpg
+      'maya simulations 3.jpg',   // ◄── IMAGE 3 : maya simulations 3.jpg
+    ]
+  },
+
+];
+
+/* =================================================================
+   BUILD SECTIONS
+================================================================= */
 const container = document.getElementById('skill-sections');
+
 sections.forEach(s => {
   const sec = document.createElement('section');
   sec.className = 'skill-section';
   sec.id = s.id;
+
+  const photoSlots = s.images.map((imgFile, i) => {
+    const n = String(i + 1).padStart(2, '0');
+    return `
+      <!-- ═══════════════════════════════════════════════════════
+           IMAGE SLOT ${n} — ${s.title.toUpperCase()}
+           FILENAME : ${imgFile}
+           Place this file in the same folder as portfolio.html
+      ══════════════════════════════════════════════════════════ -->
+      <div class="photo-slot placeholder" id="${s.id}-img-${i+1}">
+        <img
+          src="${imgFile}"
+          alt="${s.title} — ${n}"
+          onload="this.parentElement.classList.remove('placeholder')"
+          onerror="this.style.display='none'"
+        />
+        <div class="photo-corner tl"></div>
+        <div class="photo-corner tr"></div>
+        <div class="photo-corner bl"></div>
+        <div class="photo-corner br"></div>
+        <div class="photo-label">
+          <p>${s.title.toUpperCase()} — ${n}</p>
+          <small>${imgFile}</small>
+        </div>
+      </div>`;
+  }).join('');
+
   sec.innerHTML = `
     <div class="section-stripe"></div>
     <div class="skill-inner ${s.reverse ? 'reverse' : ''}">
@@ -726,72 +521,56 @@ sections.forEach(s => {
         </ul>
       </div>
       <div class="skill-photos reveal reveal-delay-1">
-        <div class="photo-slot">
-          <div class="photo-corner tl"></div>
-          <div class="photo-corner tr"></div>
-          <div class="photo-corner bl"></div>
-          <div class="photo-corner br"></div>
-          <div class="photo-label">
-            <p>${s.title.toUpperCase()} — SAMPLE 01</p>
-            <small>Replace with your image</small>
-          </div>
-        </div>
-        <div class="photo-slot">
-          <div class="photo-corner tl"></div>
-          <div class="photo-corner tr"></div>
-          <div class="photo-corner bl"></div>
-          <div class="photo-corner br"></div>
-          <div class="photo-label">
-            <p>${s.title.toUpperCase()} — SAMPLE 02</p>
-            <small>Replace with your image</small>
-          </div>
-        </div>
+        ${photoSlots}
       </div>
     </div>`;
+
   container.appendChild(sec);
 });
 
-// ── Intro animation ──────────────────────────────
-const introEl   = document.getElementById('intro');
-const introBar  = document.getElementById('introBar');
-const introNum  = document.getElementById('introCounter');
+/* =================================================================
+   INTRO
+================================================================= */
+const introEl = document.getElementById('intro');
+const introBar = document.getElementById('introBar');
+const introNum = document.getElementById('introCounter');
 const introName = document.getElementById('introName');
-
 let progress = 0;
-setTimeout(()=>{ introName.classList.add('show'); }, 200);
-
-const ticker = setInterval(()=>{
+setTimeout(() => { introName.classList.add('show'); }, 200);
+const ticker = setInterval(() => {
   progress += Math.random() * 6 + 2;
-  if(progress >= 100) { progress = 100; clearInterval(ticker); }
+  if (progress >= 100) { progress = 100; clearInterval(ticker); }
   introBar.style.width = progress + '%';
   introNum.textContent = `LOADING — ${Math.floor(progress)}%`;
-  if(progress === 100){
-    setTimeout(()=>{ introEl.classList.add('hidden'); }, 400);
-  }
+  if (progress === 100) setTimeout(() => { introEl.classList.add('hidden'); }, 400);
 }, 60);
 
-// ── Custom cursor ────────────────────────────────
-const cur  = document.getElementById('cursor');
+/* =================================================================
+   CURSOR
+================================================================= */
+const cur = document.getElementById('cursor');
 const ring = document.getElementById('cursor-ring');
-let mx=0, my=0, rx=0, ry=0;
-document.addEventListener('mousemove', e=>{ mx=e.clientX; my=e.clientY; });
-function animCursor(){
-  cur.style.left  = mx+'px'; cur.style.top  = my+'px';
-  rx += (mx-rx)*0.12; ry += (my-ry)*0.12;
-  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animCursor() {
+  cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
   requestAnimationFrame(animCursor);
 }
 animCursor();
-document.querySelectorAll('a,button').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{ cur.style.transform='translate(-50%,-50%) scale(2.5)'; ring.style.opacity='0'; });
-  el.addEventListener('mouseleave',()=>{ cur.style.transform='translate(-50%,-50%) scale(1)'; ring.style.opacity='0.5'; });
+document.querySelectorAll('a,button').forEach(el => {
+  el.addEventListener('mouseenter', () => { cur.style.transform = 'translate(-50%,-50%) scale(2.5)'; ring.style.opacity = '0'; });
+  el.addEventListener('mouseleave', () => { cur.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.opacity = '0.5'; });
 });
 
-// ── Scroll reveal ────────────────────────────────
-const observer = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold:0.12 });
-document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+/* =================================================================
+   SCROLL REVEAL
+================================================================= */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
